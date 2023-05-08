@@ -175,5 +175,6 @@ MonoBehaviour:
     - {fileID: 21300000, guid: 77fbb98f8400a5a4ab3d3ce646f0385f, type: 3}
     - {fileID: 21300000, guid: b03c2fcff664c6b48bbc1b0a35b3429a, type: 3}
     - {fileID: 21300000, guid: cc2b44a7594ead44ab4685e3b18ff9f6, type: 3}
-  testColor: 0
-  testLevel: 0
+  minCountForLevels: 00000000020000000300000004000000
+  currentLevel: 0
+  connectedGroup: []

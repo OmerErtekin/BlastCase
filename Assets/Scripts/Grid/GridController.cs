@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public class GridController : MonoBehaviour
@@ -39,7 +40,6 @@ public class GridController : MonoBehaviour
     {
         rowCount = testMatrix.GetLength(0);
         columnCount = testMatrix.GetLength(1);
-
         blockMatrix = new Block[rowCount, columnCount];
 
         Vector3 startPoint = transform.position - new Vector3((columnCount - 1) * spacingBetweenGrids / 2, (rowCount - 1) * spacingBetweenGrids / 2, 0);
@@ -53,7 +53,7 @@ public class GridController : MonoBehaviour
                 targetPosition = startPoint + new Vector3(j * spacingBetweenGrids, (rowCount - 1 - i) * spacingBetweenGrids, 0);
                 blockScript = Instantiate(blockPrefab, targetPosition, transform.rotation, gridObjectsParent).GetComponent<Block>();
                 blockMatrix[i, j] = blockScript;
-                blockScript.SetBlock(new Vector2Int(i,j),(BlockColor)testMatrix[i, j], BlockLevel.Default);
+                blockScript.InitializeBlock(new Vector2Int(i,j),(BlockColor)testMatrix[i, j], BlockLevel.Default);
                 blockScript.gameObject.name = $"{i} {j}";
             }
         }

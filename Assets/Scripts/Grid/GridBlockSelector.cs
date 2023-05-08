@@ -39,12 +39,11 @@ public class GridBlockSelector : MonoBehaviour
 
     private void OnBlockClicked(Block clickedBlock)
     {
-        var group = connectionFinder.FindGroupForABlock(clickedBlock);
-        if (group != null)
+        if (clickedBlock.GetConnectedGroup() != null)
         {
-            for (int i = 0; i < group.Count; i++)
+            for (int i = 0; i < clickedBlock.GetConnectedGroup().Count; i++)
             {
-                Destroy(group[i].gameObject);
+                Destroy(clickedBlock.GetConnectedGroup()[i].gameObject);
             }
         }
         else

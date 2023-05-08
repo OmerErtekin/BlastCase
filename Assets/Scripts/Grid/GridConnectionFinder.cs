@@ -23,7 +23,7 @@ public class GridConnectionFinder : MonoBehaviour
         gridController = GetComponent<GridController>();
     }
 
-    public List<List<Block>> FindConnectedGroups()
+    public void FindConnectedGroups()
     {
         visited = new bool[RowCount, ColumnCount];
         connectedGroups = new();
@@ -44,20 +44,32 @@ public class GridConnectionFinder : MonoBehaviour
             }
         }
 
-        PrintConnectedGroups();
-        return connectedGroups;
+        SetConnectedGroups();
     }
 
-    public List<Block> FindGroupForABlock(Block blockToControl)
+    private void SetConnectedGroups()
     {
+        for (int i = RowCount - 1; i >= 0; i--)
+        {
+            for (int j = 0; j < ColumnCount; j++)
+            {
+                SetGroupForABlock(CurrentMatrix[i, j]);
+            }
+        }
+    }
+
+    private void SetGroupForABlock(Block blockToControl)
+    {
+        List<Block> selectedGroup = null;
         for(int i = 0; i < connectedGroups.Count;i++)
         {
             if (connectedGroups[i].Contains(blockToControl))
             {
-                return connectedGroups[i];
+                selectedGroup = connectedGroups[i];
+                break;
             }
         }
-        return null;
+        blockToControl.SetConnectedGroup(selectedGroup);
     }
 
     private void PrintConnectedGroups()

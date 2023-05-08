@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using UnityEngine;
 
 public class Block : MonoBehaviour
@@ -10,9 +11,11 @@ public class Block : MonoBehaviour
 
     #region Variables
     [SerializeField] private List<SpriteListForColor> spriteList = new();
+    [SerializeField] private List<int> minCountForLevels = new();
     private Vector2Int matrixPosition;
+    public BlockLevel currentLevel;
     private BlockColor currentColor;
-    private BlockLevel currentLevel;
+    public List<Block> connectedGroup = new();
     #endregion
 
     #region Properties
@@ -20,12 +23,39 @@ public class Block : MonoBehaviour
     public BlockColor GetColor => currentColor;
     #endregion
 
-    public void SetBlock(Vector2Int position,BlockColor color,BlockLevel level)
+    public void InitializeBlock(Vector2Int position,BlockColor color,BlockLevel level)
     {
         matrixPosition = position;
         currentColor = color;
-        currentLevel = level;
-        blockSprite.sprite = spriteList[(int)color].levelSprites[(int)level];
+        blockSprite.sprite = spriteList[(int)currentColor].levelSprites[0];
+    }
+
+    public void SetConnectedGroup(List<Block> group)
+    {
+        connectedGroup = group;
+        DecideSprite();
+    }
+
+    public List<Block> GetConnectedGroup() => connectedGroup;
+
+    private void DecideSprite()
+    {
+        if(connectedGroup == null)
+        {
+            currentLevel = BlockLevel.Default;
+            blockSprite.sprite = spriteList[(int)currentColor].levelSprites[0];
+            return;
+        }
+
+        for(int i = minCountForLevels.Count -1 ; i >= 0; i--)
+        {
+            if(connectedGroup.Count >= minCountForLevels[i])
+            {
+                currentLevel = (BlockLevel)i;
+                blockSprite.sprite = spriteList[(int)currentColor].levelSprites[i];
+                return;
+            }
+        }
     }
 }
 
