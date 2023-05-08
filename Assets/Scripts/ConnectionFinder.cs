@@ -1,71 +1,75 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class ConnectionFinder : MonoBehaviour
 {
-    private int[,] matrix = {
-        {1, 0, 3, 2, 2, 3},
-        {1, 1, 1, 2, 3, 0},
-        {0, 0, 2, 2, 0, 1},
-        {1, 1, 2, 2, 3, 1}
-    };
+    #region Components
+    private GridController gridController;
+    #endregion
 
+    #region Variables
     private bool[,] visited;
-    private int rowCount;
-    private int colCount;
     private List<List<Vector2Int>> connectedGroups;
+    #endregion
 
-    void Start()
+    #region Properties
+    private Block[,] CurrentMatrix => gridController.BlockMatrix;
+    private int RowCount => gridController.BlockMatrix.GetLength(0);
+    private int ColumnCount => gridController.BlockMatrix.GetLength(1);
+    #endregion
+
+    private void Awake()
     {
-        FindConnectedGroups();
+        gridController = GetComponent<GridController>();
     }
 
-    private List<List<Vector2Int>> FindConnectedGroups()
+    public List<List<Vector2Int>> FindConnectedGroups()
     {
-        rowCount = matrix.GetLength(0);
-        colCount = matrix.GetLength(1);
-        visited = new bool[rowCount, colCount];
+        visited = new bool[RowCount, ColumnCount];
         connectedGroups = new List<List<Vector2Int>>();
 
-        for (int i = 0; i < rowCount; i++)
+        for (int i = 0; i < RowCount; i++)
         {
-            for (int j = 0; j < colCount; j++)
+            for (int j = 0; j < ColumnCount; j++)
             {
-                if (!visited[i, j])
+                if (visited[i, j])
+                    continue;
+
+                List<Vector2Int> group = new List<Vector2Int>();
+                DFS(i, j, CurrentMatrix[i, j].GetColor, group);
+                if (group.Count > 1)
                 {
-                    List<Vector2Int> group = new List<Vector2Int>();
-                    DFS(i, j, matrix[i, j], group);
                     connectedGroups.Add(group);
                 }
             }
         }
 
+        PrintConnectedGroups();
         return connectedGroups;
+    }
+
+    public bool IsThereAConnection(Block blockToControl)
+    {
+        return true;
     }
 
     private void PrintConnectedGroups()
     {
         foreach (var group in connectedGroups)
         {
-            if (group.Count > 0)
+            var str = "";
+            foreach (var cell in group)
             {
-                Debug.Log("Connected Group:");
-                var str = "";
-                foreach (var cell in group)
-                {
-                    str += " " + cell;
-                }
-
-                Debug.Log(str);
+                str += " " + cell;
             }
+
+            Debug.Log(str);
         }
     }
 
-    private void DFS(int row, int col, int value, List<Vector2Int> group)
+    private void DFS(int row, int col, BlockColor color, List<Vector2Int> group)
     {
-        if (row < 0 || col < 0 || row >= rowCount || col >= colCount || visited[row, col] || matrix[row, col] != value)
+        if (row < 0 || col < 0 || row >= RowCount || col >= ColumnCount || visited[row, col] || CurrentMatrix[row, col].GetColor != color)
         {
             return;
         }
@@ -73,9 +77,9 @@ public class ConnectionFinder : MonoBehaviour
         visited[row, col] = true;
         group.Add(new Vector2Int(row, col));
 
-        DFS(row - 1, col, value, group);
-        DFS(row + 1, col, value, group);
-        DFS(row, col - 1, value, group);
-        DFS(row, col + 1, value, group);
+        DFS(row - 1, col, color, group);
+        DFS(row + 1, col, color, group);
+        DFS(row, col - 1, color, group);
+        DFS(row, col + 1, color, group);
     }
 }
