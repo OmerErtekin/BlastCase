@@ -23,11 +23,24 @@ public class Block : MonoBehaviour
     public BlockColor GetColor => currentColor;
     #endregion
 
-    public void InitializeBlock(Vector2Int position,BlockColor color,BlockLevel level)
+    public void InitializeBlock(Vector2Int matrixPos, BlockColor color, BlockLevel level)
     {
-        matrixPosition = position;
+        matrixPosition = matrixPos;
+        name = $"{matrixPosition}";
         currentColor = color;
-        blockSprite.sprite = spriteList[(int)currentColor].levelSprites[0];
+        blockSprite.sprite = spriteList[(int)currentColor].levelSprites[(int)level];
+    }
+    
+    public void BlastTheBlock()
+    {
+        gameObject.SetActive(false);
+    }
+
+    public void SwipeDown(Vector2Int newPosition, Vector3 realWorldPosition)
+    {
+        matrixPosition = newPosition;
+        name = $"{matrixPosition}";
+        transform.position = realWorldPosition;
     }
 
     public void SetConnectedGroup(List<Block> group)
@@ -40,16 +53,16 @@ public class Block : MonoBehaviour
 
     private void DecideSprite()
     {
-        if(connectedGroup == null)
+        if (connectedGroup == null)
         {
             currentLevel = BlockLevel.Default;
             blockSprite.sprite = spriteList[(int)currentColor].levelSprites[0];
             return;
         }
 
-        for(int i = minCountForLevels.Count -1 ; i >= 0; i--)
+        for (int i = minCountForLevels.Count - 1; i >= 0; i--)
         {
-            if(connectedGroup.Count >= minCountForLevels[i])
+            if (connectedGroup.Count >= minCountForLevels[i])
             {
                 currentLevel = (BlockLevel)i;
                 blockSprite.sprite = spriteList[(int)currentColor].levelSprites[i];

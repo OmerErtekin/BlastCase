@@ -9,6 +9,7 @@ public class GridBlockSelector : MonoBehaviour
     #region Components
     private Camera mainCamera;
     private GridConnectionFinder connectionFinder;
+    private GridController controller;
     #endregion
 
     #region Variables
@@ -17,6 +18,7 @@ public class GridBlockSelector : MonoBehaviour
     private void Start()
     {
         connectionFinder = GetComponent<GridConnectionFinder>();
+        controller = GetComponent<GridController>();
         mainCamera = Camera.main;
     }
 
@@ -41,14 +43,11 @@ public class GridBlockSelector : MonoBehaviour
     {
         if (clickedBlock.GetConnectedGroup() != null)
         {
-            for (int i = 0; i < clickedBlock.GetConnectedGroup().Count; i++)
-            {
-                Destroy(clickedBlock.GetConnectedGroup()[i].gameObject);
-            }
+            controller.BlastAGroup(clickedBlock.GetConnectedGroup());
         }
         else
         {
-            Debug.Log("no connection", clickedBlock.gameObject);
+            Debug.Log("no connection");
         }
     }
 }

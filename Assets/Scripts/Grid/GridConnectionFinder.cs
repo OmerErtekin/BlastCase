@@ -72,19 +72,6 @@ public class GridConnectionFinder : MonoBehaviour
         blockToControl.SetConnectedGroup(selectedGroup);
     }
 
-    private void PrintConnectedGroups()
-    {
-        foreach (var group in connectedGroups)
-        {
-            var str = "";
-            foreach (var cell in group)
-            {
-                str += " " + cell;
-            }
-            Debug.Log(str);
-        }
-    }
-
     private void DFS(int row, int col, BlockColor color, List<Block> group)
     {
         if (row < 0 || col < 0 || row >= RowCount || col >= ColumnCount || visited[row, col] || CurrentMatrix[row, col].GetColor != color)
