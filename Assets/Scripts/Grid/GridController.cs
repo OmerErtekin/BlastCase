@@ -80,6 +80,8 @@ public class GridController : MonoBehaviour
         {
             swiper.SwipeTheColumnsDown(block.Value);
         }
+
+      //  connectionFinder.FindConnectedGroups();
     }
 
 }

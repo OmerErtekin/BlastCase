@@ -32,7 +32,7 @@ public class GridConnectionFinder : MonoBehaviour
         {
             for (int j = 0; j < ColumnCount; j++)
             {
-                if (visited[i, j])
+                if (visited[i, j] || CurrentMatrix[i,j] == null)
                     continue;
 
                 List<Block> group = new();
@@ -74,7 +74,8 @@ public class GridConnectionFinder : MonoBehaviour
 
     private void DFS(int row, int col, BlockColor color, List<Block> group)
     {
-        if (row < 0 || col < 0 || row >= RowCount || col >= ColumnCount || visited[row, col] || CurrentMatrix[row, col].GetColor != color)
+        if (row < 0 || col < 0 || row >= RowCount || col >= ColumnCount ||
+            visited[row, col] || CurrentMatrix[row, col].GetColor != color)
         {
             return;
         }

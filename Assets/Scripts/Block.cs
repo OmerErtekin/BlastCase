@@ -13,9 +13,10 @@ public class Block : MonoBehaviour
     [SerializeField] private List<SpriteListForColor> spriteList = new();
     [SerializeField] private List<int> minCountForLevels = new();
     private Vector2Int matrixPosition;
-    public BlockLevel currentLevel;
+    private BlockLevel currentLevel;
     private BlockColor currentColor;
-    public List<Block> connectedGroup = new();
+    private List<Block> connectedGroup = new();
+    private Coroutine fallRoutine;
     #endregion
 
     #region Properties
@@ -40,7 +41,11 @@ public class Block : MonoBehaviour
     {
         matrixPosition = newPosition;
         name = $"{matrixPosition}";
-        transform.position = realWorldPosition;
+        if(fallRoutine != null)
+        {
+            StopCoroutine(fallRoutine);
+        }
+        fallRoutine = StartCoroutine(FallDown(realWorldPosition));
     }
 
     public void SetConnectedGroup(List<Block> group)
@@ -69,6 +74,16 @@ public class Block : MonoBehaviour
                 return;
             }
         }
+    }
+
+    private IEnumerator FallDown(Vector3 targetPosition)
+    {
+        while((transform.position - targetPosition).sqrMagnitude > Mathf.Epsilon)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, 10 * Time.deltaTime);
+            yield return null;
+        }
+        transform.position = targetPosition;
     }
 }
 

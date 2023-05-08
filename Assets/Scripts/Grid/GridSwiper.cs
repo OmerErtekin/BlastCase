@@ -24,9 +24,17 @@ public class GridSwiper : MonoBehaviour
     {
         if (destroyedPoses[0].x == 0) return;
 
-        int column = destroyedPoses[0].y;
-
-        StartCoroutine(SwipeDownUntilNotNull(column, destroyedPoses[0].x));
+        for (int i = destroyedPoses[0].x; i >= 0; i--)
+        {
+            var currentBlock = CurrentMatrix[i, destroyedPoses[0].y];
+            for (; ShouldSwipeDown(currentBlock);)
+            {
+                var pos = currentBlock.GetPosition;
+                currentBlock.SwipeDown(new Vector2Int(pos.x + 1, pos.y), PositionMatrix[pos.x + 1, pos.y]);
+                CurrentMatrix[pos.x, pos.y] = null;
+                CurrentMatrix[pos.x + 1, pos.y] = currentBlock;
+            }
+        }
     }
 
     public Dictionary<int, List<Vector2Int>> GroupBlocksByColumn(List<Block> blocks)
@@ -51,23 +59,6 @@ public class GridSwiper : MonoBehaviour
         }
 
         return columnGroups;
-    }
-
-    private IEnumerator SwipeDownUntilNotNull(int column, int deepestRow)
-    {
-        for (int i = deepestRow; i >= 0; i--)
-        {
-            var currentBlock = CurrentMatrix[i, column];
-            while (ShouldSwipeDown(currentBlock))
-            {
-                var pos = currentBlock.GetPosition;
-                currentBlock.SwipeDown(new Vector2Int(pos.x + 1, pos.y), PositionMatrix[pos.x + 1, pos.y]);
-                CurrentMatrix[pos.x, pos.y] = null;
-                CurrentMatrix[pos.x + 1, pos.y] = currentBlock;
-                yield return null;
-            }
-        }
-        yield return null;
     }
 
     private bool ShouldSwipeDown(Block current)
