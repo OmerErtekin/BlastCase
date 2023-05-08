@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -10,6 +9,10 @@ public class GridSwiper : MonoBehaviour
     #endregion
 
     #region Variables
+    private Dictionary<int, List<Vector2Int>> columnGroups = new();
+    #endregion
+
+    #region Properties
     private Block[,] CurrentMatrix => gridController.BlockMatrix;
     private Vector3[,] PositionMatrix => gridController.PositionMatrix;
     private int RowCount => gridController.BlockMatrix.GetLength(0);
@@ -20,8 +23,18 @@ public class GridSwiper : MonoBehaviour
         gridController = GetComponent<GridController>();
     }
 
-    public void SwipeTheColumnsDown(List<Vector2Int> destroyedPoses)
+    public void SwipeColumnsDown(List<Block> blocks)
     {
+        GroupBlocksByColumn(blocks);
+        foreach (var column in columnGroups)
+        {
+            SwipeTheColumnDown(column.Value);
+        }
+    }
+
+    private void SwipeTheColumnDown(List<Vector2Int> destroyedPoses)
+    {
+
         if (destroyedPoses[0].x == 0) return;
 
         for (int i = destroyedPoses[0].x; i >= 0; i--)
@@ -37,9 +50,10 @@ public class GridSwiper : MonoBehaviour
         }
     }
 
-    public Dictionary<int, List<Vector2Int>> GroupBlocksByColumn(List<Block> blocks)
+    public void GroupBlocksByColumn(List<Block> blocks)
     {
-        Dictionary<int, List<Vector2Int>> columnGroups = new Dictionary<int, List<Vector2Int>>();
+        columnGroups.Clear();
+        columnGroups = new Dictionary<int, List<Vector2Int>>();
 
         for (int i = 0; i < blocks.Count; i++)
         {
@@ -57,8 +71,6 @@ public class GridSwiper : MonoBehaviour
             int column = columnKeys[i];
             columnGroups[column] = columnGroups[column].OrderByDescending(block => block.x).ToList();
         }
-
-        return columnGroups;
     }
 
     private bool ShouldSwipeDown(Block current)

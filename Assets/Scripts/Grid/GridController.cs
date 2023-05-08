@@ -12,7 +12,6 @@ public class GridController : MonoBehaviour
     private Block[,] blockMatrix;
     private Vector3[,] positionMatrix;
     private int rowCount, columnCount;
-
     private int[,] testMatrix =
     {
         {0, 0, 1, 1, 1, 3},
@@ -69,19 +68,26 @@ public class GridController : MonoBehaviour
 
     public void BlastAGroup(List<Block> groupToBlast)
     {
-        var groupedDict = swiper.GroupBlocksByColumn(groupToBlast);
         for (int i = 0; i < groupToBlast.Count; i++)
         {
             var position = groupToBlast[i].GetPosition;
             BlockMatrix[position.x, position.y] = null;
             groupToBlast[i].BlastTheBlock();
         }
-        foreach (var block in groupedDict)
-        {
-            swiper.SwipeTheColumnsDown(block.Value);
-        }
-
-      //  connectionFinder.FindConnectedGroups();
+        swiper.SwipeColumnsDown(groupToBlast);
+        PrintTheMatrix();
     }
 
+    private void PrintTheMatrix()
+    {
+        for(int i = 0;i<rowCount;i++)
+        {
+            var str = "";
+            for(int j = 0;j <columnCount;j++)
+            {
+                str += blockMatrix[i, j];
+            }
+            Debug.Log(str);
+        }
+    }
 }
