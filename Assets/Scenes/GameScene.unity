@@ -367,6 +367,7 @@ GameObject:
   - component: {fileID: 1822048293}
   - component: {fileID: 1822048292}
   - component: {fileID: 1822048294}
+  - component: {fileID: 1822048295}
   m_Layer: 0
   m_Name: GridCreator
   m_TagString: Untagged
@@ -419,3 +420,15 @@ MonoBehaviour:
   backgroudParent: {fileID: 0}
   gridObjectsParent: {fileID: 1822048293}
   spacingBetweenGrids: 1
+--- !u!114 &1822048295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1822048291}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1d5e32bc9ecb214e93cacec118a0daf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

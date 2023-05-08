@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GridController : MonoBehaviour
@@ -24,7 +21,7 @@ public class GridController : MonoBehaviour
     #endregion
 
     #region Components
-    private ConnectionFinder connectionFinder;
+    private GridConnectionFinder connectionFinder;
     #endregion
 
     #region Properties
@@ -33,14 +30,9 @@ public class GridController : MonoBehaviour
 
     void Start()
     {
-        connectionFinder = GetComponent<ConnectionFinder>();
+        connectionFinder = GetComponent<GridConnectionFinder>();
         CreateGrid();
         connectionFinder.FindConnectedGroups();
-    }
-
-    void Update()
-    {
-
     }
 
     private void CreateGrid()
