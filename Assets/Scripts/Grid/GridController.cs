@@ -75,19 +75,5 @@ public class GridController : MonoBehaviour
             groupToBlast[i].BlastTheBlock();
         }
         swiper.SwipeColumnsDown(groupToBlast);
-        PrintTheMatrix();
-    }
-
-    private void PrintTheMatrix()
-    {
-        for(int i = 0;i<rowCount;i++)
-        {
-            var str = "";
-            for(int j = 0;j <columnCount;j++)
-            {
-                str += blockMatrix[i, j];
-            }
-            Debug.Log(str);
-        }
     }
 }
