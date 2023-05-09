@@ -10,9 +10,9 @@ public class GridObjectSpawner : MonoBehaviour
     #endregion
 
     #region Variables
-    [SerializeField] private float bonusForEachAdjacent = 0.5f;
+    [SerializeField] private float bonusForEachAdjacent = 0.5f,bonusForConnecteds = 0.1f;
     public Vector2Int test;
-    private Dictionary<BlockColor, int> surroundingColors = new();
+    private Dictionary<BlockColor, float> surroundingColors = new();
 
     Dictionary<BlockColor, float> baseProbabilities = new Dictionary<BlockColor, float>()
 {
@@ -87,25 +87,24 @@ public class GridObjectSpawner : MonoBehaviour
 
         if (position.x != 0 && CurrentMatrix[position.x - 1, position.y])
         {
-            AddColorToDictionary(CurrentMatrix[position.x - 1, position.y].GetColor);
+            AddColorToDictionary(CurrentMatrix[position.x - 1, position.y]);
         }
         if (position.y != 0 && CurrentMatrix[position.x, position.y - 1])
         {
-            AddColorToDictionary(CurrentMatrix[position.x, position.y - 1].GetColor);
+            AddColorToDictionary(CurrentMatrix[position.x, position.y - 1]);
         }
         if (position.x != RowCount - 1 && CurrentMatrix[position.x + 1, position.y])
         {
-            AddColorToDictionary(CurrentMatrix[position.x + 1, position.y].GetColor);
+            AddColorToDictionary(CurrentMatrix[position.x + 1, position.y]);
         }
         if (position.y != ColumnCount - 1 && CurrentMatrix[position.x, position.y + 1])
         {
-            AddColorToDictionary(CurrentMatrix[position.x, position.y + 1].GetColor);
+            AddColorToDictionary(CurrentMatrix[position.x, position.y + 1]);
         }
     }
 
     private void SetAdjustedProbabilitys()
     {
-        //TO DO : Also think about the group count of neighbors
         ResetAdjustedProbabiltys();
         foreach (var kvp in surroundingColors)
         {
@@ -116,15 +115,23 @@ public class GridObjectSpawner : MonoBehaviour
         }
     }
 
-    private void AddColorToDictionary(BlockColor color)
+    private void AddColorToDictionary(Block block)
     {
-        if (surroundingColors.ContainsKey(color))
+        if (surroundingColors.ContainsKey(block.GetColor))
         {
-            surroundingColors[color]++;
+            surroundingColors[block.GetColor]++;
+            if(block.GetConnectedGroup() != null)
+            {
+                surroundingColors[block.GetColor]+= block.GetConnectedGroup().Count * bonusForConnecteds;
+            }
         }
         else
         {
-            surroundingColors[color] = 1;
+            surroundingColors[block.GetColor] = 1;
+            if (block.GetConnectedGroup() != null)
+            {
+                surroundingColors[block.GetColor] += block.GetConnectedGroup().Count * bonusForConnecteds;
+            }
         }
     }
 
