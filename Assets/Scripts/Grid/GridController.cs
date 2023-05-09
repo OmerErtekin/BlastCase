@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using System.Linq;
+using TMPro;
 
 public class GridController : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class GridController : MonoBehaviour
     [SerializeField] private float spacingBetweenGrids = 1f;
     private Block[,] blockMatrix;
     private Vector3[,] positionMatrix;
+    private List<int> affectedColumns = new();
     private int rowCount, columnCount;
     private int[,] testMatrix =
     {
@@ -26,6 +28,7 @@ public class GridController : MonoBehaviour
     #region Components
     private GridSwiper swiper;
     private GridConnectionFinder connectionFinder;
+    private GridObjectSpawner objectSpawner;
     #endregion
 
     #region Properties
@@ -37,6 +40,7 @@ public class GridController : MonoBehaviour
     {
         swiper = GetComponent<GridSwiper>();
         connectionFinder = GetComponent<GridConnectionFinder>();
+        objectSpawner = GetComponent<GridObjectSpawner>();
         CreateGrid();
         connectionFinder.FindConnectedGroups();
     }
@@ -66,14 +70,45 @@ public class GridController : MonoBehaviour
         }
     }
 
+    private void CreateNewBlockForPosition(Vector2Int index)
+    {
+        Vector3 targetPosition = positionMatrix[index.x, index.y];
+        Block blockScript = Instantiate(blockPrefab, targetPosition + Vector3.up * 5 , transform.rotation, gridObjectsParent).GetComponent<Block>();
+        blockScript.InitializeBlock(index,objectSpawner.GetColorToSpawn(index),BlockLevel.Default);
+        blockScript.SwipeDown(index, targetPosition);
+        blockScript.gameObject.name = $"{index}";
+        blockMatrix[index.x, index.y] = blockScript;    
+    }
+
     public void BlastAGroup(List<Block> groupToBlast)
     {
+        affectedColumns.Clear();
         for (int i = 0; i < groupToBlast.Count; i++)
         {
+            if (!affectedColumns.Contains(groupToBlast[i].GetPosition.y))
+            {
+                affectedColumns.Add(groupToBlast[i].GetPosition.y);
+            }
             var position = groupToBlast[i].GetPosition;
             BlockMatrix[position.x, position.y] = null;
             groupToBlast[i].BlastTheBlock();
         }
         swiper.SwipeColumnsDown(groupToBlast);
+        FillEmptyColumns();
+        connectionFinder.FindConnectedGroups();
+    }
+
+    private void FillEmptyColumns()
+    {
+        foreach(var column in affectedColumns)
+        {
+            for(int i = 0;i<rowCount;i++)
+            {
+                if (blockMatrix[i,column] == null)
+                {
+                    CreateNewBlockForPosition(new Vector2Int(i, column));
+                }
+            }
+        }
     }
 }

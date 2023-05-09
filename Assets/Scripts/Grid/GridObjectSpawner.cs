@@ -1,0 +1,148 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+
+public class GridObjectSpawner : MonoBehaviour
+{
+    #region Components
+    private GridController gridController;
+    #endregion
+
+    #region Variables
+    [SerializeField] private float bonusForEachAdjacent = 0.5f;
+    public Vector2Int test;
+    private Dictionary<BlockColor, int> surroundingColors = new();
+
+    Dictionary<BlockColor, float> baseProbabilities = new Dictionary<BlockColor, float>()
+{
+    {BlockColor.Blue, 1.66f},
+    {BlockColor.Green, 1.66f},
+    {BlockColor.Pink, 1.66f},
+    {BlockColor.Purple, 1.66f},
+    {BlockColor.Red, 1.66f},
+    {BlockColor.Yellow, 1.66f}
+};
+    Dictionary<BlockColor, float> adjustedProbabiltys = new Dictionary<BlockColor, float>()
+{
+    {BlockColor.Blue, 1.66f},
+    {BlockColor.Green, 1.66f},
+    {BlockColor.Pink, 1.66f},
+    {BlockColor.Purple, 1.66f},
+    {BlockColor.Red, 1.66f},
+    {BlockColor.Yellow, 1.66f}
+};
+
+    private float cumulativeProbabilty;
+
+    #endregion
+
+    #region Properties
+    private Block[,] CurrentMatrix => gridController.BlockMatrix;
+    private int RowCount => gridController.BlockMatrix.GetLength(0);
+    private int ColumnCount => gridController.BlockMatrix.GetLength(1);
+    #endregion
+    private void Awake()
+    {
+        gridController = GetComponent<GridController>();
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            for (int i = 0; i < 20; i++)
+                Debug.Log(GetColorToSpawn(test));
+        }
+    }
+
+    public BlockColor GetColorToSpawn(Vector2Int position)
+    {
+        CalculateProbabiltys(position);
+        cumulativeProbabilty = adjustedProbabiltys.Values.Sum();
+
+        float randomNumber = Random.value * cumulativeProbabilty;
+        foreach (var kvp in adjustedProbabiltys)
+        {
+            if (randomNumber <= kvp.Value)
+            {
+                return kvp.Key;
+            }
+            randomNumber -= kvp.Value;
+        }
+
+        return BlockColor.Blue;
+    }
+
+    private void CalculateProbabiltys(Vector2Int position)
+    {
+        SetSurroundingObjects(position);
+        SetAdjustedProbabilitys();
+    }
+
+    private void SetSurroundingObjects(Vector2Int position)
+    {
+        surroundingColors.Clear();
+        cumulativeProbabilty = 0;
+
+        if (position.x != 0 && CurrentMatrix[position.x - 1, position.y])
+        {
+            AddColorToDictionary(CurrentMatrix[position.x - 1, position.y].GetColor);
+        }
+        if (position.y != 0 && CurrentMatrix[position.x, position.y - 1])
+        {
+            AddColorToDictionary(CurrentMatrix[position.x, position.y - 1].GetColor);
+        }
+        if (position.x != RowCount - 1 && CurrentMatrix[position.x + 1, position.y])
+        {
+            AddColorToDictionary(CurrentMatrix[position.x + 1, position.y].GetColor);
+        }
+        if (position.y != ColumnCount - 1 && CurrentMatrix[position.x, position.y + 1])
+        {
+            AddColorToDictionary(CurrentMatrix[position.x, position.y + 1].GetColor);
+        }
+    }
+
+    private void SetAdjustedProbabilitys()
+    {
+        //TO DO : Also think about the group count of neighbors
+        ResetAdjustedProbabiltys();
+        foreach (var kvp in surroundingColors)
+        {
+            if (adjustedProbabiltys.ContainsKey(kvp.Key))
+            {
+                adjustedProbabiltys[kvp.Key] += kvp.Value * bonusForEachAdjacent;
+            }
+        }
+    }
+
+    private void AddColorToDictionary(BlockColor color)
+    {
+        if (surroundingColors.ContainsKey(color))
+        {
+            surroundingColors[color]++;
+        }
+        else
+        {
+            surroundingColors[color] = 1;
+        }
+    }
+
+    private void ResetAdjustedProbabiltys()
+    {
+        foreach (var key in adjustedProbabiltys.Keys.ToList())
+        {
+            adjustedProbabiltys[key] = 1.66f;
+        }
+    }
+
+    private void PrintProbabiltys()
+    {
+        var str = "";
+        foreach (var pair in adjustedProbabiltys)
+        {
+            str += $" {pair.Key} : {pair.Value}";
+        }
+        Debug.Log(str);
+    }
+}
