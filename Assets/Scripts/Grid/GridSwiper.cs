@@ -18,18 +18,31 @@ public class GridSwiper : MonoBehaviour
     private int RowCount => gridController.BlockMatrix.GetLength(0);
     #endregion
 
+    private void OnEnable()
+    {
+        EventManager.StartListening(EventKeys.OnBlastCompleted, SwipeColumnsDown);
+    }
+
+    private void OnDisable()
+    {
+        EventManager.StopListening(EventKeys.OnBlastCompleted, SwipeColumnsDown);
+    }
+
     private void Awake()
     {
         gridController = GetComponent<GridController>();
     }
 
-    public void SwipeColumnsDown(List<Block> blocks)
+    private void SwipeColumnsDown(object[] obj = null)
     {
+        var blocks = (List<Block>)obj[0];
+
         GroupBlocksByColumn(blocks);
         foreach (var column in columnGroups)
         {
             SwipeTheColumnDown(column.Value);
         }
+        EventManager.TriggerEvent(EventKeys.OnSwipeDownCompleted, new object[] { });
     }
 
     private void SwipeTheColumnDown(List<Vector2Int> destroyedPoses)
@@ -49,7 +62,7 @@ public class GridSwiper : MonoBehaviour
         }
     }
 
-    public void GroupBlocksByColumn(List<Block> blocks)
+    private void GroupBlocksByColumn(List<Block> blocks)
     {
         //We don't need to check every single column after a blast
         //I create dictionary for affected columns and the pieces that are destroyed in this column. And sort the group by blocks row index

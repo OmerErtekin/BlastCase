@@ -1,28 +1,37 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class GridBlockSelector : MonoBehaviour
 {
     #region Components
     private Camera mainCamera;
-    private GridController controller;
     #endregion
 
     #region Variables
-    private bool canSelect = true;
+    private bool canSelectBlock = true;
     #endregion
+
+    private void OnEnable()
+    {
+        EventManager.StartListening(EventKeys.OnGridCreated, EnableSelection);
+        EventManager.StartListening(EventKeys.OnShuffleRequested, DisableSelection);
+        EventManager.StartListening(EventKeys.OnShuffleCompleted, EnableSelection);
+    }
+
+    private void OnDisable()
+    {
+        EventManager.StopListening(EventKeys.OnGridCreated, EnableSelection);
+        EventManager.StopListening(EventKeys.OnShuffleRequested, DisableSelection);
+        EventManager.StopListening(EventKeys.OnShuffleCompleted, EnableSelection);
+    }
+
     private void Start()
     {
-        controller = GetComponent<GridController>();
         mainCamera = Camera.main;
     }
 
     private void Update()
     {
-        if (!canSelect) return;
+        if (!canSelectBlock) return;
 
         if(Input.GetMouseButtonDown(0))
             HandleBlockSelection();
@@ -41,11 +50,14 @@ public class GridBlockSelector : MonoBehaviour
     {
         if (clickedBlock.GetConnectedGroup() != null)
         {
-            controller.BlastAGroup(clickedBlock.GetConnectedGroup());
+            EventManager.TriggerEvent(EventKeys.OnBlastRequested, new object[] { clickedBlock.GetConnectedGroup() });
         }
         else
         {
             clickedBlock.ShakeTheBlock();
         }
     }
+
+    private void EnableSelection(object[] obj = null) => canSelectBlock = true;
+    private void DisableSelection(object[] obj = null) => canSelectBlock = false; 
 }

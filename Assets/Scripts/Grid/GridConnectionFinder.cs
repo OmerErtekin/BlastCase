@@ -18,15 +18,28 @@ public class GridConnectionFinder : MonoBehaviour
     private int ColumnCount => gridController.BlockMatrix.GetLength(1);
     #endregion
 
+    private void OnEnable()
+    {
+        EventManager.StartListening(EventKeys.OnGridCreated, FindConnectedGroups);
+        EventManager.StartListening(EventKeys.OnFillColumnsCompleted, FindConnectedGroups);
+    }
+
+    private void OnDisable()
+    {
+        EventManager.StopListening(EventKeys.OnGridCreated, FindConnectedGroups);
+        EventManager.StopListening(EventKeys.OnFillColumnsCompleted, FindConnectedGroups);
+    }
+
     private void Awake()
     {
         gridController = GetComponent<GridController>();
     }
 
-    public void FindConnectedGroups()
+    private void FindConnectedGroups(object obj = null)
     {
         visited = new bool[RowCount, ColumnCount];
         connectedGroups = new();
+        int totalGroupCount = 0;
 
         for (int i = 0; i < RowCount; i++)
         {
@@ -41,11 +54,19 @@ public class GridConnectionFinder : MonoBehaviour
                 DepthFirstSearch(i, j, CurrentMatrix[i, j].GetColor, group);
                 if (group.Count > 1)
                 {
+                    totalGroupCount++;
                     connectedGroups.Add(group);
                 }
             }
         }
-        SetConnectedGroups();
+        if(totalGroupCount > 0)
+        {
+            SetConnectedGroups();
+        }
+        else
+        {
+            EventManager.TriggerEvent(EventKeys.OnShuffleRequested, new object[] { });
+        }
     }
 
     private void SetConnectedGroups()

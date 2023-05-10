@@ -1,9 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class GridObjectSpawner : MonoBehaviour
+public class SpawnColorDecider : MonoBehaviour
 {
     #region Components
     private GridController gridController;
@@ -41,6 +40,7 @@ public class GridObjectSpawner : MonoBehaviour
     private int RowCount => gridController.BlockMatrix.GetLength(0);
     private int ColumnCount => gridController.BlockMatrix.GetLength(1);
     #endregion
+
     private void Awake()
     {
         gridController = GetComponent<GridController>();

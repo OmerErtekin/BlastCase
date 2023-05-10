@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
 public class GridController : MonoBehaviour
@@ -23,9 +21,7 @@ public class GridController : MonoBehaviour
     #endregion
 
     #region Components
-    private GridSwiper swiper;
-    private GridConnectionFinder connectionFinder;
-    private GridObjectSpawner objectSpawner;
+    private SpawnColorDecider decider;
     private BlockPool blockPool;
     #endregion
 
@@ -34,13 +30,24 @@ public class GridController : MonoBehaviour
     public Vector3[,] PositionMatrix => positionMatrix;
     #endregion
 
+    private void OnEnable()
+    {
+        EventManager.StartListening(EventKeys.OnBlastRequested, BlastAGroup);
+        EventManager.StartListening(EventKeys.OnSwipeDownCompleted, FillEmptyIndexes);
+    }
+
+    private void OnDisable()
+    {
+        EventManager.StopListening(EventKeys.OnBlastRequested, BlastAGroup);
+        EventManager.StopListening(EventKeys.OnSwipeDownCompleted, FillEmptyIndexes);
+    }
+
     private void Awake()
     {
-        swiper = GetComponent<GridSwiper>();
-        connectionFinder = GetComponent<GridConnectionFinder>();
-        objectSpawner = GetComponent<GridObjectSpawner>();
+        decider = GetComponent<SpawnColorDecider>();
         blockPool = GetComponent<BlockPool>();
     }
+
 
     private void Start()
     {
@@ -63,14 +70,15 @@ public class GridController : MonoBehaviour
             {
                 targetPosition = startPoint + new Vector3(j * spacingBetweenGrids, (rowCount - 1 - i) * spacingBetweenGrids, 0);
                 positionMatrix[i, j] = targetPosition;
-                SpawnABlock(targetPosition, new Vector2Int(i, j));
+                SpawnABlock((BlockColor)startMatrix[i,j],targetPosition,new Vector2Int(i,j));
             }
         }
-        connectionFinder.FindConnectedGroups();
+        EventManager.TriggerEvent(EventKeys.OnGridCreated,new object[] { });
     }
 
-    public void BlastAGroup(List<Block> groupToBlast)
+    private void BlastAGroup(object[] obj = null)
     {
+        var groupToBlast = (List<Block>)obj[0];
         affectedColumns.Clear();
         for (int i = 0; i < groupToBlast.Count; i++)
         {
@@ -84,12 +92,10 @@ public class GridController : MonoBehaviour
             BlockMatrix[position.x, position.y] = null;
             groupToBlast[i].BlastTheBlock();
         }
-        swiper.SwipeColumnsDown(groupToBlast);
-        FillEmptyIndexes();
-        connectionFinder.FindConnectedGroups();
+        EventManager.TriggerEvent(EventKeys.OnBlastCompleted, new object[] { groupToBlast });
     }
 
-    private void FillEmptyIndexes()
+    private void FillEmptyIndexes(object[] obj = null)
     {
         foreach(var column in affectedColumns)
         {
@@ -99,16 +105,17 @@ public class GridController : MonoBehaviour
 
                 var index = new Vector2Int(i, column);
                 Vector3 targetPosition = positionMatrix[i, column];
-                SpawnABlock(targetPosition + Vector3.up * 5, index).SwipeDown(index, targetPosition);
+                SpawnABlock(decider.GetColorToSpawn(index),targetPosition + Vector3.up * 5, index).SwipeDown(index, targetPosition);
             }
         }
+        EventManager.TriggerEvent(EventKeys.OnFillColumnsCompleted, new object[] { });
     }
 
-    private Block SpawnABlock(Vector3 targetPosition,Vector2Int index)
+    private Block SpawnABlock(BlockColor color,Vector3 targetPosition,Vector2Int index)
     {
         Block blockScript = blockPool.GetBlock();
         blockScript.transform.SetPositionAndRotation(targetPosition, transform.rotation);
-        blockScript.InitializeBlock(index, (BlockColor)startMatrix[index.x, index.y]);
+        blockScript.InitializeBlock(index,color);
         blockMatrix[index.x, index.y] = blockScript;
         return blockScript;
     }
