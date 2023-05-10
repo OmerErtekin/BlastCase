@@ -48,9 +48,9 @@ public class GridBlockSelector : MonoBehaviour
 
     private void OnBlockClicked(Block clickedBlock)
     {
-        if (clickedBlock.GetConnectedGroup() != null)
+        if (clickedBlock.GetConnectedGroup != null)
         {
-            EventManager.TriggerEvent(EventKeys.OnBlastRequested, new object[] { clickedBlock.GetConnectedGroup() });
+            EventManager.TriggerEvent(EventKeys.OnBlastRequested, new object[] { clickedBlock.GetConnectedGroup });
         }
         else
         {

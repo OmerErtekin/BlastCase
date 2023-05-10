@@ -95,5 +95,6 @@ public enum EventKeys
     OnSwipeDownCompleted,
     OnFillColumnsCompleted,
     OnShuffleRequested,
+    OnShuffledGridReady,
     OnShuffleCompleted,
 }

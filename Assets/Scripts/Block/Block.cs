@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Block : MonoBehaviour,IBlastable
+public class Block : MonoBehaviour, IBlastable
 {
     #region Components
     [SerializeField] private SpriteRenderer blockSprite;
@@ -20,6 +20,7 @@ public class Block : MonoBehaviour,IBlastable
 
     #region Properties
     public Vector2Int GetPosition => matrixPosition;
+    public List<Block> GetConnectedGroup => connectedGroup;
     public BlockColor GetColor => currentColor;
     #endregion
 
@@ -53,16 +54,22 @@ public class Block : MonoBehaviour,IBlastable
     public void SwipeDown(Vector2Int newPosition, Vector3 realWorldPosition)
     {
         matrixPosition = newPosition;
-        if(fallRoutine != null)
+        if (fallRoutine != null)
         {
             StopCoroutine(fallRoutine);
         }
         fallRoutine = StartCoroutine(FallDown(realWorldPosition));
     }
 
+    public void MoveToNewPosition(Vector2Int newPosition, Vector3 realWorldPosition)
+    {
+        matrixPosition = newPosition;
+        transform.DOMove(realWorldPosition, 0.5f).SetTarget(this);
+    }
+
     private IEnumerator FallDown(Vector3 targetPosition)
     {
-        while((transform.position - targetPosition).sqrMagnitude > Mathf.Epsilon)
+        while ((transform.position - targetPosition).sqrMagnitude > Mathf.Epsilon)
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, 15 * Time.deltaTime);
             yield return null;
@@ -76,7 +83,7 @@ public class Block : MonoBehaviour,IBlastable
         DecideSprite();
     }
 
-    public List<Block> GetConnectedGroup() => connectedGroup;
+
 
     public void SetBlockPool(BlockPool pool) => blockPool = pool;
 

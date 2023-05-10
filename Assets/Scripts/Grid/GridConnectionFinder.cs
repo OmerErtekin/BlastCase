@@ -22,12 +22,15 @@ public class GridConnectionFinder : MonoBehaviour
     {
         EventManager.StartListening(EventKeys.OnGridCreated, FindConnectedGroups);
         EventManager.StartListening(EventKeys.OnFillColumnsCompleted, FindConnectedGroups);
+        EventManager.StartListening(EventKeys.OnShuffleCompleted, FindConnectedGroups);
+
     }
 
     private void OnDisable()
     {
         EventManager.StopListening(EventKeys.OnGridCreated, FindConnectedGroups);
         EventManager.StopListening(EventKeys.OnFillColumnsCompleted, FindConnectedGroups);
+        EventManager.StopListening(EventKeys.OnShuffleCompleted, FindConnectedGroups);
     }
 
     private void Awake()

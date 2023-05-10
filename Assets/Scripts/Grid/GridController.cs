@@ -8,6 +8,7 @@ public class GridController : MonoBehaviour
     private Block[,] blockMatrix;
     private Vector3[,] positionMatrix;
     private List<int> affectedColumns = new();
+
     private int rowCount, columnCount;
     private int[,] startMatrix =
     {
@@ -18,6 +19,14 @@ public class GridController : MonoBehaviour
         {0, 0, 2, 0, 0, 1},
         {1, 1, 4, 4, 3, 1}
     };
+    /* To test shuffling replace the matrix with
+        {1, 0, 2, 3, 4, 1},
+        {2, 1, 3, 4, 3, 2},
+        {3, 0, 1, 0, 2, 3},
+        {0, 3, 2, 1, 4, 0},
+        {2, 4, 1, 2, 3, 4},
+        {0, 1, 2, 3, 1, 0}
+     */
     #endregion
 
     #region Components
@@ -34,12 +43,14 @@ public class GridController : MonoBehaviour
     {
         EventManager.StartListening(EventKeys.OnBlastRequested, BlastAGroup);
         EventManager.StartListening(EventKeys.OnSwipeDownCompleted, FillEmptyIndexes);
+        EventManager.StartListening(EventKeys.OnShuffledGridReady, UpdateGridAfterShuffle);
     }
 
     private void OnDisable()
     {
         EventManager.StopListening(EventKeys.OnBlastRequested, BlastAGroup);
         EventManager.StopListening(EventKeys.OnSwipeDownCompleted, FillEmptyIndexes);
+        EventManager.StopListening(EventKeys.OnShuffledGridReady, UpdateGridAfterShuffle);
     }
 
     private void Awake()
@@ -47,7 +58,6 @@ public class GridController : MonoBehaviour
         decider = GetComponent<SpawnColorDecider>();
         blockPool = GetComponent<BlockPool>();
     }
-
 
     private void Start()
     {
@@ -118,5 +128,12 @@ public class GridController : MonoBehaviour
         blockScript.InitializeBlock(index,color);
         blockMatrix[index.x, index.y] = blockScript;
         return blockScript;
+    }
+
+    private void UpdateGridAfterShuffle(object[] obj = null)
+    {
+        Block[,] shuffledMatrix = (Block[,])obj[0];
+        blockMatrix = shuffledMatrix;
+        EventManager.TriggerEvent(EventKeys.OnShuffleCompleted, new object[] { });
     }
 }

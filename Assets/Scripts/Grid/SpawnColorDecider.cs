@@ -110,17 +110,17 @@ public class SpawnColorDecider : MonoBehaviour
         if (surroundingColors.ContainsKey(block.GetColor))
         {
             surroundingColors[block.GetColor]++;
-            if(block.GetConnectedGroup() != null)
+            if(block.GetConnectedGroup != null)
             {
-                surroundingColors[block.GetColor]+= block.GetConnectedGroup().Count * gameConfig.bonusForConnecteds;
+                surroundingColors[block.GetColor]+= block.GetConnectedGroup.Count * gameConfig.bonusForConnecteds;
             }
         }
         else
         {
             surroundingColors[block.GetColor] = 1;
-            if (block.GetConnectedGroup() != null)
+            if (block.GetConnectedGroup != null)
             {
-                surroundingColors[block.GetColor] += block.GetConnectedGroup().Count * gameConfig.bonusForConnecteds;
+                surroundingColors[block.GetColor] += block.GetConnectedGroup.Count * gameConfig.bonusForConnecteds;
             }
         }
     }

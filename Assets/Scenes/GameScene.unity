@@ -446,6 +446,7 @@ GameObject:
   - component: {fileID: 1822048296}
   - component: {fileID: 1822048297}
   - component: {fileID: 1822048298}
+  - component: {fileID: 1822048299}
   m_Layer: 0
   m_Name: GridController
   m_TagString: Untagged
@@ -493,7 +494,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74e7a12e937321a49bbd7005999b8dd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spacingBetweenGrids: 1
+  spacingBetweenGrids: 0.75
 --- !u!114 &1822048295
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -547,3 +548,15 @@ MonoBehaviour:
   blockPrefab: {fileID: 792609072284670054, guid: 3e4056702dd41a744ad52f4be8efd10e,
     type: 3}
   initialPoolSize: 50
+--- !u!114 &1822048299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1822048291}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2c4b95844599c847b59891409293f75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
