@@ -10,9 +10,10 @@ public class GridShuffler : MonoBehaviour
     #endregion
 
     #region Variables
-    HashSet<Block> movedBlocks = new ();
+    private HashSet<Block> movedBlocks = new ();
     private int[,] intGrid;
     private Block[,] shuffledGrid;
+    private Coroutine shuffleRoutine;
     #endregion
 
     #region Properties
@@ -25,11 +26,13 @@ public class GridShuffler : MonoBehaviour
     private void OnEnable()
     {
         EventManager.StartListening(EventKeys.OnShuffleRequested, ShuffleGrid);
+        EventManager.StartListening(EventKeys.OnGridResetRequested, CancelShuffle);
     }
 
     private void OnDisable()
     {
         EventManager.StopListening(EventKeys.OnShuffleRequested, ShuffleGrid);
+        EventManager.StopListening(EventKeys.OnGridResetRequested, CancelShuffle);
     }
 
     private void Awake()
@@ -37,15 +40,23 @@ public class GridShuffler : MonoBehaviour
         gridController = GetComponent<GridController>();
     }
 
+    private void CancelShuffle(object[] obj = null)
+    {
+        if(shuffleRoutine != null)
+        {
+            StopCoroutine(shuffleRoutine);
+        }
+    }
+
     private void ShuffleGrid(object[] obj = null)
     {
         ConvertGridToInt();
         if (HasValidMove())
         {
-            EventManager.TriggerEvent(EventKeys.OnShuffleCompleted, new object[] { });
+            EventManager.TriggerEvent(EventKeys.OnShuffleCompleted);
             return;
         }
-        StartCoroutine(ShuffleGridUntilValid());
+        shuffleRoutine = StartCoroutine(ShuffleGridUntilValid());
     }
 
     private IEnumerator ShuffleGridUntilValid()

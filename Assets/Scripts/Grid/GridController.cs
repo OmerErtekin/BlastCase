@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,7 +9,7 @@ public class GridController : MonoBehaviour
     private Block[,] blockMatrix;
     private Vector3[,] positionMatrix;
     private List<int> affectedColumns = new();
-
+    private bool isReseting = false;
     private int rowCount, columnCount;
     private int[,] startMatrix =
     {
@@ -41,16 +42,20 @@ public class GridController : MonoBehaviour
 
     private void OnEnable()
     {
+        EventManager.StartListening(EventKeys.OnGameStarted, CreateGrid);
         EventManager.StartListening(EventKeys.OnBlastRequested, BlastAGroup);
         EventManager.StartListening(EventKeys.OnSwipeDownCompleted, FillEmptyIndexes);
         EventManager.StartListening(EventKeys.OnShuffledGridReady, UpdateGridAfterShuffle);
+        EventManager.StartListening(EventKeys.OnGridResetRequested, ResetGrid);
     }
 
     private void OnDisable()
     {
+        EventManager.StopListening(EventKeys.OnGameStarted, CreateGrid);
         EventManager.StopListening(EventKeys.OnBlastRequested, BlastAGroup);
         EventManager.StopListening(EventKeys.OnSwipeDownCompleted, FillEmptyIndexes);
         EventManager.StopListening(EventKeys.OnShuffledGridReady, UpdateGridAfterShuffle);
+        EventManager.StopListening(EventKeys.OnGridResetRequested, ResetGrid);
     }
 
     private void Awake()
@@ -59,12 +64,7 @@ public class GridController : MonoBehaviour
         blockPool = GetComponent<BlockPool>();
     }
 
-    private void Start()
-    {
-        CreateGrid();
-    }
-
-    private void CreateGrid()
+    private void CreateGrid(object[] obj = null)
     {
         rowCount = startMatrix.GetLength(0);
         columnCount = startMatrix.GetLength(1);
@@ -83,7 +83,7 @@ public class GridController : MonoBehaviour
                 SpawnABlock((BlockColor)startMatrix[i,j],targetPosition,new Vector2Int(i,j));
             }
         }
-        EventManager.TriggerEvent(EventKeys.OnGridCreated,new object[] { });
+        EventManager.TriggerEvent(EventKeys.OnGridCreated);
     }
 
     private void BlastAGroup(object[] obj = null)
@@ -118,7 +118,7 @@ public class GridController : MonoBehaviour
                 SpawnABlock(decider.GetColorToSpawn(index),targetPosition + Vector3.up * 5, index).SwipeDown(index, targetPosition);
             }
         }
-        EventManager.TriggerEvent(EventKeys.OnFillColumnsCompleted, new object[] { });
+        EventManager.TriggerEvent(EventKeys.OnFillColumnsCompleted);
     }
 
     private Block SpawnABlock(BlockColor color,Vector3 targetPosition,Vector2Int index)
@@ -134,6 +134,27 @@ public class GridController : MonoBehaviour
     {
         Block[,] shuffledMatrix = (Block[,])obj[0];
         blockMatrix = shuffledMatrix;
-        EventManager.TriggerEvent(EventKeys.OnShuffleCompleted, new object[] { });
+        EventManager.TriggerEvent(EventKeys.OnShuffleCompleted);
+    }
+
+    private void ResetGrid(object[] obj = null)
+    {
+        if (isReseting) return;
+        isReseting = true;
+        StartCoroutine(ResetRoutine());
+    }
+
+    private IEnumerator ResetRoutine()
+    {
+        for (int i = 0; i < rowCount; i++)
+        {
+            for (int j = 0; j < columnCount; j++)
+            {
+                blockMatrix[i, j].Blast();
+            }
+        }
+        yield return new WaitForSeconds(0.5f);
+        CreateGrid();
+        isReseting = false;
     }
 }

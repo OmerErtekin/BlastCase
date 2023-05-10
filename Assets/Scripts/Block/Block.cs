@@ -30,6 +30,8 @@ public class Block : MonoBehaviour, IBlastable
         matrixPosition = matrixPos;
         currentColor = color;
         blockSprite.sprite = config.spriteList[(int)currentColor].levelSprites[0];
+        transform.DOKill();
+        transform.DOScale(1, 0.35f).From(0).SetTarget(this);
     }
 
     public void Blast()
