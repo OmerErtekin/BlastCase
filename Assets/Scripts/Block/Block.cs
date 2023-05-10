@@ -98,8 +98,6 @@ public class Block : MonoBehaviour, IBlastable
         DecideSprite();
     }
 
-
-
     public void SetBlockPool(BlockPool pool) => blockPool = pool;
 
     private void DecideSprite()
