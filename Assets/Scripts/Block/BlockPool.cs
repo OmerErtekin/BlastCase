@@ -4,6 +4,7 @@ using UnityEngine;
 public class BlockPool : MonoBehaviour
 {
     #region Variables
+    [SerializeField] private Transform parentTransform;
     [SerializeField] private GameObject blockPrefab;
     [SerializeField] private int initialPoolSize = 50;
     private Queue<Block> blockPool = new Queue<Block>();
@@ -19,7 +20,7 @@ public class BlockPool : MonoBehaviour
         Block blockScript;
         for (int i = 0; i < initialPoolSize; i++)
         {
-            GameObject instance = Instantiate(blockPrefab,transform);
+            GameObject instance = Instantiate(blockPrefab, parentTransform);
             instance.SetActive(false);
             blockScript = instance.GetComponent<Block>();
             blockScript.SetBlockPool(this);
@@ -37,7 +38,7 @@ public class BlockPool : MonoBehaviour
         }
         else
         {
-            GameObject instance = Instantiate(blockPrefab,transform);
+            GameObject instance = Instantiate(blockPrefab, parentTransform);
             return instance.GetComponent<Block>();
         }
     }

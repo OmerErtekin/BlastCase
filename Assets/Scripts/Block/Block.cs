@@ -23,11 +23,11 @@ public class Block : MonoBehaviour
     public BlockColor GetColor => currentColor;
     #endregion
 
-    public void InitializeBlock(Vector2Int matrixPos, BlockColor color, BlockLevel level)
+    public void InitializeBlock(Vector2Int matrixPos, BlockColor color)
     {
         matrixPosition = matrixPos;
         currentColor = color;
-        blockSprite.sprite = config.spriteList[(int)currentColor].levelSprites[(int)level];
+        blockSprite.sprite = config.spriteList[(int)currentColor].levelSprites[0];
     }
     
     public void BlastTheBlock()

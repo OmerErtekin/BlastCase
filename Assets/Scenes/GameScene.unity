@@ -123,6 +123,37 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &173330945
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 173330946}
+  m_Layer: 0
+  m_Name: Blocks
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &173330946
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 173330945}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1822048293}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -401,7 +432,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 173330946}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -417,11 +449,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74e7a12e937321a49bbd7005999b8dd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blockPrefab: {fileID: 792609072284670054, guid: 3e4056702dd41a744ad52f4be8efd10e,
+  blockPrefab: {fileID: 0}
+  backgroundPrefab: {fileID: 792609072284670054, guid: 5688d398f8b81fb43847c78a3a0d9b90,
     type: 3}
-  backgroundPrefab: {fileID: 0}
   backgroudParent: {fileID: 0}
-  gridObjectsParent: {fileID: 1822048293}
+  gridObjectsParent: {fileID: 0}
   spacingBetweenGrids: 1
 --- !u!114 &1822048295
 MonoBehaviour:
@@ -472,6 +504,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d8618437a2a7cf43892ef4400266eac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  parentTransform: {fileID: 173330946}
   blockPrefab: {fileID: 792609072284670054, guid: 3e4056702dd41a744ad52f4be8efd10e,
     type: 3}
   initialPoolSize: 50

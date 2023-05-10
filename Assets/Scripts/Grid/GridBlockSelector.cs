@@ -8,7 +8,6 @@ public class GridBlockSelector : MonoBehaviour
 {
     #region Components
     private Camera mainCamera;
-    private GridConnectionFinder connectionFinder;
     private GridController controller;
     #endregion
 
@@ -17,7 +16,6 @@ public class GridBlockSelector : MonoBehaviour
     #endregion
     private void Start()
     {
-        connectionFinder = GetComponent<GridConnectionFinder>();
         controller = GetComponent<GridController>();
         mainCamera = Camera.main;
     }

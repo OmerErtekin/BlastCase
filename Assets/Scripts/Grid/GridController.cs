@@ -1,17 +1,17 @@
+using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class GridController : MonoBehaviour
 {
     #region Variables
-    [SerializeField] private GameObject blockPrefab, backgroundPrefab;
-    [SerializeField] private Transform backgroudParent, gridObjectsParent;
     [SerializeField] private float spacingBetweenGrids = 1f;
     private Block[,] blockMatrix;
     private Vector3[,] positionMatrix;
     private List<int> affectedColumns = new();
     private int rowCount, columnCount;
-    private int[,] testMatrix =
+    private int[,] startMatrix =
     {
         {0, 0, 1, 1, 1, 3},
         {1, 2, 2, 2, 2, 3},
@@ -45,43 +45,28 @@ public class GridController : MonoBehaviour
     private void Start()
     {
         CreateGrid();
-        connectionFinder.FindConnectedGroups();
     }
 
     private void CreateGrid()
     {
-        rowCount = testMatrix.GetLength(0);
-        columnCount = testMatrix.GetLength(1);
+        rowCount = startMatrix.GetLength(0);
+        columnCount = startMatrix.GetLength(1);
         blockMatrix = new Block[rowCount, columnCount];
         positionMatrix = new Vector3[rowCount, columnCount];
 
         Vector3 startPoint = transform.position - new Vector3((columnCount - 1) * spacingBetweenGrids / 2, (rowCount - 1) * spacingBetweenGrids / 2, 0);
         Vector3 targetPosition;
-        Block blockScript;
 
         for (int i = rowCount - 1; i >= 0; i--)
         {
             for (int j = 0; j < columnCount; j++)
             {
                 targetPosition = startPoint + new Vector3(j * spacingBetweenGrids, (rowCount - 1 - i) * spacingBetweenGrids, 0);
-                blockScript = blockPool.GetBlock();
-                blockScript.transform.SetPositionAndRotation(targetPosition,Quaternion.Euler(0,0,0));
-
                 positionMatrix[i, j] = targetPosition;
-                blockMatrix[i, j] = blockScript;
-                blockScript.InitializeBlock(new Vector2Int(i, j), (BlockColor)testMatrix[i, j], BlockLevel.Default);
+                SpawnABlock(targetPosition, new Vector2Int(i, j));
             }
         }
-    }
-
-    private void CreateNewBlockForPosition(Vector2Int index)
-    {
-        Vector3 targetPosition = positionMatrix[index.x, index.y];
-        Block blockScript = blockPool.GetBlock();
-        blockScript.transform.SetPositionAndRotation(targetPosition + Vector3.up * 5, Quaternion.Euler(0, 0, 0));
-        blockScript.InitializeBlock(index,objectSpawner.GetColorToSpawn(index),BlockLevel.Default);
-        blockScript.SwipeDown(index, targetPosition);
-        blockMatrix[index.x, index.y] = blockScript;    
+        connectionFinder.FindConnectedGroups();
     }
 
     public void BlastAGroup(List<Block> groupToBlast)
@@ -89,6 +74,8 @@ public class GridController : MonoBehaviour
         affectedColumns.Clear();
         for (int i = 0; i < groupToBlast.Count; i++)
         {
+            //We store affected columns data to have more efficent FillEmptyIndexes method
+            //We will only check affected columns for empty positions
             if (!affectedColumns.Contains(groupToBlast[i].GetPosition.y))
             {
                 affectedColumns.Add(groupToBlast[i].GetPosition.y);
@@ -98,21 +85,31 @@ public class GridController : MonoBehaviour
             groupToBlast[i].BlastTheBlock();
         }
         swiper.SwipeColumnsDown(groupToBlast);
-        FillEmptyColumns();
+        FillEmptyIndexes();
         connectionFinder.FindConnectedGroups();
     }
 
-    private void FillEmptyColumns()
+    private void FillEmptyIndexes()
     {
         foreach(var column in affectedColumns)
         {
             for(int i = 0;i<rowCount;i++)
             {
-                if (blockMatrix[i,column] == null)
-                {
-                    CreateNewBlockForPosition(new Vector2Int(i, column));
-                }
+                if (blockMatrix[i, column] != null) continue;
+
+                var index = new Vector2Int(i, column);
+                Vector3 targetPosition = positionMatrix[i, column];
+                SpawnABlock(targetPosition + Vector3.up * 5, index).SwipeDown(index, targetPosition);
             }
         }
+    }
+
+    private Block SpawnABlock(Vector3 targetPosition,Vector2Int index)
+    {
+        Block blockScript = blockPool.GetBlock();
+        blockScript.transform.SetPositionAndRotation(targetPosition, transform.rotation);
+        blockScript.InitializeBlock(index, (BlockColor)startMatrix[index.x, index.y]);
+        blockMatrix[index.x, index.y] = blockScript;
+        return blockScript;
     }
 }

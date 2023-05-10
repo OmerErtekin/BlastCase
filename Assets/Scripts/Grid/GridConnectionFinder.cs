@@ -36,14 +36,15 @@ public class GridConnectionFinder : MonoBehaviour
                     continue;
 
                 List<Block> group = new();
-                DFS(i, j, CurrentMatrix[i, j].GetColor, group);
+                //For each element we make a depth first search to find the connected groups
+                //If is there any connection, we store it
+                DepthFirstSearch(i, j, CurrentMatrix[i, j].GetColor, group);
                 if (group.Count > 1)
                 {
                     connectedGroups.Add(group);
                 }
             }
         }
-
         SetConnectedGroups();
     }
 
@@ -72,7 +73,7 @@ public class GridConnectionFinder : MonoBehaviour
         blockToControl.SetConnectedGroup(selectedGroup);
     }
 
-    private void DFS(int row, int col, BlockColor color, List<Block> group)
+    private void DepthFirstSearch(int row, int col, BlockColor color, List<Block> group)
     {
         if (row < 0 || col < 0 || row >= RowCount || col >= ColumnCount ||
             visited[row, col] || CurrentMatrix[row, col].GetColor != color)
@@ -83,9 +84,9 @@ public class GridConnectionFinder : MonoBehaviour
         visited[row, col] = true;
         group.Add(CurrentMatrix[row, col]);
 
-        DFS(row - 1, col, color, group);
-        DFS(row + 1, col, color, group);
-        DFS(row, col - 1, color, group);
-        DFS(row, col + 1, color, group);
+        DepthFirstSearch(row - 1, col, color, group);
+        DepthFirstSearch(row + 1, col, color, group);
+        DepthFirstSearch(row, col - 1, color, group);
+        DepthFirstSearch(row, col + 1, color, group);
     }
 }
