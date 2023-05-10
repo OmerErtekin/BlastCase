@@ -144,37 +144,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blockSprite: {fileID: 792609071315604013}
-  spriteList:
-  - levelSprites:
-    - {fileID: 21300000, guid: eac58f45612097948aead458d85e1861, type: 3}
-    - {fileID: 21300000, guid: 44aa747432c72fe498447e6d89d2dec8, type: 3}
-    - {fileID: 21300000, guid: 6edfd98f917623940945581403ab7dee, type: 3}
-    - {fileID: 21300000, guid: 0b104c4a84a7e7c4d8968cf9bdcfb455, type: 3}
-  - levelSprites:
-    - {fileID: 21300000, guid: fecaf81abe295a04cbf16d9d174fe809, type: 3}
-    - {fileID: 21300000, guid: 1d864b359dfbde04eb984e29c473b1ca, type: 3}
-    - {fileID: 21300000, guid: 8bbd335ac2721424d9fe4edbc12c2860, type: 3}
-    - {fileID: 21300000, guid: 06cfc164750f4694f8b29e1533416a73, type: 3}
-  - levelSprites:
-    - {fileID: 21300000, guid: 88639698f356c2d4a9413f98a06460a4, type: 3}
-    - {fileID: 21300000, guid: 10d590e54ede65d47989e136dc9013e0, type: 3}
-    - {fileID: 21300000, guid: c90fd4f0cb53ac4408acbd6a47132883, type: 3}
-    - {fileID: 21300000, guid: 4374fcc78a58ca643a77332d9de0cc65, type: 3}
-  - levelSprites:
-    - {fileID: 21300000, guid: 35a076ebc9e8d0f47ab92ef395f0ac18, type: 3}
-    - {fileID: 21300000, guid: 1f6077c8b2369774e95046a764dc029f, type: 3}
-    - {fileID: 21300000, guid: 9844216b527c07242874ea8bd0df9c1d, type: 3}
-    - {fileID: 21300000, guid: 6aa9316b68ac85a4da1f42d2c52ad354, type: 3}
-  - levelSprites:
-    - {fileID: 21300000, guid: 2e1788b4456153648834ea74d49813bd, type: 3}
-    - {fileID: 21300000, guid: 505b54a8e5b2c1741ab767e17ab38f62, type: 3}
-    - {fileID: 21300000, guid: b20a1db6f4d308d43a6a9c15e910c070, type: 3}
-    - {fileID: 21300000, guid: 593901d8c037bf349849527d9a5d295a, type: 3}
-  - levelSprites:
-    - {fileID: 21300000, guid: fcfca9a1d3027dd43b9e9dc8c0421fa6, type: 3}
-    - {fileID: 21300000, guid: 77fbb98f8400a5a4ab3d3ce646f0385f, type: 3}
-    - {fileID: 21300000, guid: b03c2fcff664c6b48bbc1b0a35b3429a, type: 3}
-    - {fileID: 21300000, guid: cc2b44a7594ead44ab4685e3b18ff9f6, type: 3}
-  minCountForLevels: 00000000020000000300000004000000
-  currentLevel: 0
-  connectedGroup: []
+  config: {fileID: 11400000, guid: 6472b5b661a229b4a8b492ff28fa2d6b, type: 2}

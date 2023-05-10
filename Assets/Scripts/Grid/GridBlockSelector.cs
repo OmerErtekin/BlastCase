@@ -47,7 +47,7 @@ public class GridBlockSelector : MonoBehaviour
         }
         else
         {
-            Debug.Log("no connection");
+            clickedBlock.ShakeTheBlock();
         }
     }
 }

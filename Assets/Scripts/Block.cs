@@ -1,6 +1,6 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using UnityEngine;
 
 public class Block : MonoBehaviour
@@ -10,10 +10,8 @@ public class Block : MonoBehaviour
     #endregion
 
     #region Variables
-    [SerializeField] private List<SpriteListForColor> spriteList = new();
-    [SerializeField] private List<int> minCountForLevels = new();
+    [SerializeField] private GameConfig config;
     private Vector2Int matrixPosition;
-    private BlockLevel currentLevel;
     private BlockColor currentColor;
     private List<Block> connectedGroup = new();
     private Coroutine fallRoutine;
@@ -27,14 +25,23 @@ public class Block : MonoBehaviour
     public void InitializeBlock(Vector2Int matrixPos, BlockColor color, BlockLevel level)
     {
         matrixPosition = matrixPos;
-        name = $"{matrixPosition}";
         currentColor = color;
-        blockSprite.sprite = spriteList[(int)currentColor].levelSprites[(int)level];
+        blockSprite.sprite = config.spriteList[(int)currentColor].levelSprites[(int)level];
     }
     
     public void BlastTheBlock()
     {
-        gameObject.SetActive(false);
+        transform.DOKill();
+        transform.DOScale(0, 0.25f).SetTarget(this).SetEase(Ease.InBack).OnComplete(()=> gameObject.SetActive(false));
+    }
+
+    public void ShakeTheBlock()
+    {
+        transform.DOKill();
+        transform.DOShakeRotation(0.5f, new Vector3(0, 0, 30)).SetTarget(this).OnComplete(() =>
+        {
+            transform.DORotate(Vector3.zero, 0.1f).SetTarget(this);
+        });
     }
 
     public void SwipeDown(Vector2Int newPosition, Vector3 realWorldPosition)
@@ -60,17 +67,15 @@ public class Block : MonoBehaviour
     {
         if (connectedGroup == null)
         {
-            currentLevel = BlockLevel.Default;
-            blockSprite.sprite = spriteList[(int)currentColor].levelSprites[0];
+            blockSprite.sprite = config.spriteList[(int)currentColor].levelSprites[0];
             return;
         }
 
-        for (int i = minCountForLevels.Count - 1; i >= 0; i--)
+        for (int i = config.minCountsForLevels.Count - 1; i >= 0; i--)
         {
-            if (connectedGroup.Count >= minCountForLevels[i])
+            if (connectedGroup.Count >= config.minCountsForLevels[i])
             {
-                currentLevel = (BlockLevel)i;
-                blockSprite.sprite = spriteList[(int)currentColor].levelSprites[i];
+                blockSprite.sprite = config.spriteList[(int)currentColor].levelSprites[i];
                 return;
             }
         }
@@ -85,28 +90,4 @@ public class Block : MonoBehaviour
         }
         transform.position = targetPosition;
     }
-}
-
-[System.Serializable]
-public class SpriteListForColor
-{
-    public List<Sprite> levelSprites;
-}
-
-public enum BlockColor
-{
-    Blue,
-    Green,
-    Pink,
-    Purple,
-    Red,
-    Yellow
-}
-
-public enum BlockLevel
-{
-    Default,
-    A,
-    B,
-    C
 }

@@ -10,8 +10,7 @@ public class GridObjectSpawner : MonoBehaviour
     #endregion
 
     #region Variables
-    [SerializeField] private float bonusForEachAdjacent = 0.5f,bonusForConnecteds = 0.1f;
-    public Vector2Int test;
+    [SerializeField] private GameConfig gameConfig;
     private Dictionary<BlockColor, float> surroundingColors = new();
 
     Dictionary<BlockColor, float> baseProbabilities = new Dictionary<BlockColor, float>()
@@ -45,15 +44,6 @@ public class GridObjectSpawner : MonoBehaviour
     private void Awake()
     {
         gridController = GetComponent<GridController>();
-    }
-
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            for (int i = 0; i < 20; i++)
-                Debug.Log(GetColorToSpawn(test));
-        }
     }
 
     public BlockColor GetColorToSpawn(Vector2Int position)
@@ -110,7 +100,7 @@ public class GridObjectSpawner : MonoBehaviour
         {
             if (adjustedProbabiltys.ContainsKey(kvp.Key))
             {
-                adjustedProbabiltys[kvp.Key] += kvp.Value * bonusForEachAdjacent;
+                adjustedProbabiltys[kvp.Key] += kvp.Value * gameConfig.bonusForEachAdjacent;
             }
         }
     }
@@ -122,7 +112,7 @@ public class GridObjectSpawner : MonoBehaviour
             surroundingColors[block.GetColor]++;
             if(block.GetConnectedGroup() != null)
             {
-                surroundingColors[block.GetColor]+= block.GetConnectedGroup().Count * bonusForConnecteds;
+                surroundingColors[block.GetColor]+= block.GetConnectedGroup().Count * gameConfig.bonusForConnecteds;
             }
         }
         else
@@ -130,7 +120,7 @@ public class GridObjectSpawner : MonoBehaviour
             surroundingColors[block.GetColor] = 1;
             if (block.GetConnectedGroup() != null)
             {
-                surroundingColors[block.GetColor] += block.GetConnectedGroup().Count * bonusForConnecteds;
+                surroundingColors[block.GetColor] += block.GetConnectedGroup().Count * gameConfig.bonusForConnecteds;
             }
         }
     }
@@ -139,7 +129,7 @@ public class GridObjectSpawner : MonoBehaviour
     {
         foreach (var key in adjustedProbabiltys.Keys.ToList())
         {
-            adjustedProbabiltys[key] = 1.66f;
+            adjustedProbabiltys[key] = baseProbabilities[key];
         }
     }
 

@@ -458,5 +458,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14cbcca040a8b434494ee8a69c350d33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bonusForEachAdjacent: 5
-  test: {x: 0, y: 0}
+  gameConfig: {fileID: 11400000, guid: 6472b5b661a229b4a8b492ff28fa2d6b, type: 2}
