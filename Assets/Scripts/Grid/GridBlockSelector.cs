@@ -59,5 +59,6 @@ public class GridBlockSelector : MonoBehaviour
     }
 
     private void EnableSelection(object[] obj = null) => canSelectBlock = true;
+
     private void DisableSelection(object[] obj = null) => canSelectBlock = false; 
 }

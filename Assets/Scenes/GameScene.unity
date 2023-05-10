@@ -1547,8 +1547,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentTransform: {fileID: 173330946}
-  blockPrefab: {fileID: 792609072284670054, guid: 3e4056702dd41a744ad52f4be8efd10e,
-    type: 3}
+  gameConfig: {fileID: 11400000, guid: 6472b5b661a229b4a8b492ff28fa2d6b, type: 2}
   initialPoolSize: 50
 --- !u!114 &1822048299
 MonoBehaviour:

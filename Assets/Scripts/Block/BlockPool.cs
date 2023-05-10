@@ -5,7 +5,7 @@ public class BlockPool : MonoBehaviour
 {
     #region Variables
     [SerializeField] private Transform parentTransform;
-    [SerializeField] private GameObject blockPrefab;
+    [SerializeField] private GameConfig gameConfig;
     [SerializeField] private int initialPoolSize = 50;
     private Queue<Block> blockPool = new Queue<Block>();
     #endregion
@@ -20,7 +20,7 @@ public class BlockPool : MonoBehaviour
         Block blockScript;
         for (int i = 0; i < initialPoolSize; i++)
         {
-            GameObject instance = Instantiate(blockPrefab, parentTransform);
+            GameObject instance = Instantiate(gameConfig.blockPrefab, parentTransform);
             instance.SetActive(false);
             blockScript = instance.GetComponent<Block>();
             blockScript.SetBlockPool(this);
@@ -38,7 +38,7 @@ public class BlockPool : MonoBehaviour
         }
         else
         {
-            Block blockScript = Instantiate(blockPrefab, parentTransform).GetComponent<Block>();
+            Block blockScript = Instantiate(gameConfig.blockPrefab, parentTransform).GetComponent<Block>();
             blockScript.SetBlockPool(this);
             return blockScript;
         }

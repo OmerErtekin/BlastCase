@@ -14,6 +14,9 @@ public class GameConfig : ScriptableObject
     [Header("The higher values, the easier gameplay")]
     public float bonusForEachAdjacent = 5f;
     public float bonusForConnecteds = 0.1f;
+
+    [Space(5)]
+    public GameObject blockPrefab;
 }
 
 
