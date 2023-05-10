@@ -3,7 +3,7 @@ using System;
 
 public class GridReader : MonoBehaviour
 {
-    [Header("To test Shuffle mechanic, change the name with ShuffleLevelData")]
+    [Header("To test Shuffle mechanic, change the name with ShuffleLevelData\nYou can change levels in Resources folder")]
 
     [SerializeField] private string fileName = "LevelData";
 
