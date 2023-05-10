@@ -7,6 +7,7 @@ public class Block : MonoBehaviour
 {
     #region Components
     [SerializeField] private SpriteRenderer blockSprite;
+    private BlockPool blockPool;
     #endregion
 
     #region Variables
@@ -31,8 +32,13 @@ public class Block : MonoBehaviour
     
     public void BlastTheBlock()
     {
+        if (fallRoutine != null)
+        {
+            StopCoroutine(fallRoutine);
+        }
         transform.DOKill();
-        transform.DOScale(0, 0.25f).SetTarget(this).SetEase(Ease.InBack).OnComplete(()=> gameObject.SetActive(false));
+        blockPool.AddBlockToPool(this);
+        gameObject.SetActive(false);
     }
 
     public void ShakeTheBlock()
@@ -47,12 +53,21 @@ public class Block : MonoBehaviour
     public void SwipeDown(Vector2Int newPosition, Vector3 realWorldPosition)
     {
         matrixPosition = newPosition;
-        name = $"{matrixPosition}";
         if(fallRoutine != null)
         {
             StopCoroutine(fallRoutine);
         }
         fallRoutine = StartCoroutine(FallDown(realWorldPosition));
+    }
+
+    private IEnumerator FallDown(Vector3 targetPosition)
+    {
+        while((transform.position - targetPosition).sqrMagnitude > Mathf.Epsilon)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, 15 * Time.deltaTime);
+            yield return null;
+        }
+        transform.position = targetPosition;
     }
 
     public void SetConnectedGroup(List<Block> group)
@@ -62,6 +77,8 @@ public class Block : MonoBehaviour
     }
 
     public List<Block> GetConnectedGroup() => connectedGroup;
+
+    public void SetBlockPool(BlockPool pool) => blockPool = pool;
 
     private void DecideSprite()
     {
@@ -79,15 +96,5 @@ public class Block : MonoBehaviour
                 return;
             }
         }
-    }
-
-    private IEnumerator FallDown(Vector3 targetPosition)
-    {
-        while((transform.position - targetPosition).sqrMagnitude > Mathf.Epsilon)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, 10 * Time.deltaTime);
-            yield return null;
-        }
-        transform.position = targetPosition;
     }
 }

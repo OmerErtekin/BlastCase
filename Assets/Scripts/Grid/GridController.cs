@@ -1,8 +1,5 @@
 using System.Collections.Generic;
-using System.Collections;
 using UnityEngine;
-using System.Linq;
-using TMPro;
 
 public class GridController : MonoBehaviour
 {
@@ -29,6 +26,7 @@ public class GridController : MonoBehaviour
     private GridSwiper swiper;
     private GridConnectionFinder connectionFinder;
     private GridObjectSpawner objectSpawner;
+    private BlockPool blockPool;
     #endregion
 
     #region Properties
@@ -36,11 +34,16 @@ public class GridController : MonoBehaviour
     public Vector3[,] PositionMatrix => positionMatrix;
     #endregion
 
-    void Start()
+    private void Awake()
     {
         swiper = GetComponent<GridSwiper>();
         connectionFinder = GetComponent<GridConnectionFinder>();
         objectSpawner = GetComponent<GridObjectSpawner>();
+        blockPool = GetComponent<BlockPool>();
+    }
+
+    private void Start()
+    {
         CreateGrid();
         connectionFinder.FindConnectedGroups();
     }
@@ -61,11 +64,12 @@ public class GridController : MonoBehaviour
             for (int j = 0; j < columnCount; j++)
             {
                 targetPosition = startPoint + new Vector3(j * spacingBetweenGrids, (rowCount - 1 - i) * spacingBetweenGrids, 0);
-                blockScript = Instantiate(blockPrefab, targetPosition, transform.rotation, gridObjectsParent).GetComponent<Block>();
+                blockScript = blockPool.GetBlock();
+                blockScript.transform.SetPositionAndRotation(targetPosition,Quaternion.Euler(0,0,0));
+
                 positionMatrix[i, j] = targetPosition;
                 blockMatrix[i, j] = blockScript;
                 blockScript.InitializeBlock(new Vector2Int(i, j), (BlockColor)testMatrix[i, j], BlockLevel.Default);
-                blockScript.gameObject.name = $"{i} {j}";
             }
         }
     }
@@ -73,10 +77,10 @@ public class GridController : MonoBehaviour
     private void CreateNewBlockForPosition(Vector2Int index)
     {
         Vector3 targetPosition = positionMatrix[index.x, index.y];
-        Block blockScript = Instantiate(blockPrefab, targetPosition + Vector3.up * 5 , transform.rotation, gridObjectsParent).GetComponent<Block>();
+        Block blockScript = blockPool.GetBlock();
+        blockScript.transform.SetPositionAndRotation(targetPosition + Vector3.up * 5, Quaternion.Euler(0, 0, 0));
         blockScript.InitializeBlock(index,objectSpawner.GetColorToSpawn(index),BlockLevel.Default);
         blockScript.SwipeDown(index, targetPosition);
-        blockScript.gameObject.name = $"{index}";
         blockMatrix[index.x, index.y] = blockScript;    
     }
 

@@ -5,11 +5,13 @@ using UnityEngine;
 public class GameConfig : ScriptableObject
 {
     [Header("Block Settings")]
+    [Space(5)]
     public List<SpriteListForColor> spriteList;
-    [Header("Min counts for icons")]
     public List<int> minCountsForLevels;
 
     [Header("Game Settings")]
+    [Space(5)]
+    [Header("The higher values, the easier gameplay")]
     public float bonusForEachAdjacent = 5f;
     public float bonusForConnecteds = 0.1f;
 }
