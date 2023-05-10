@@ -11,27 +11,12 @@ public class GridController : MonoBehaviour
     private List<int> affectedColumns = new();
     private bool isReseting = false;
     private int rowCount, columnCount;
-    private int[,] startMatrix =
-    {
-        {0, 0, 1, 1, 1, 3},
-        {1, 2, 2, 2, 2, 3},
-        {1, 0, 3, 0, 2, 3},
-        {1, 5, 5, 2, 2, 0},
-        {0, 0, 2, 0, 0, 1},
-        {1, 1, 4, 4, 3, 1}
-    };
-    /* To test shuffling replace the matrix with
-        {1, 0, 2, 3, 4, 1},
-        {2, 1, 3, 4, 3, 2},
-        {3, 0, 1, 0, 2, 3},
-        {0, 3, 2, 1, 4, 0},
-        {2, 4, 1, 2, 3, 4},
-        {0, 1, 2, 3, 1, 0}
-     */
+    private int[,] startMatrix;
     #endregion
 
     #region Components
     private SpawnColorDecider decider;
+    private GridReader gridReader;
     private BlockPool blockPool;
     #endregion
 
@@ -62,6 +47,8 @@ public class GridController : MonoBehaviour
     {
         decider = GetComponent<SpawnColorDecider>();
         blockPool = GetComponent<BlockPool>();
+        gridReader = GetComponent<GridReader>();
+        startMatrix = gridReader.LoadLevel();
     }
 
     private void CreateGrid(object[] obj = null)

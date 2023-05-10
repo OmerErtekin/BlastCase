@@ -38,8 +38,9 @@ public class BlockPool : MonoBehaviour
         }
         else
         {
-            GameObject instance = Instantiate(blockPrefab, parentTransform);
-            return instance.GetComponent<Block>();
+            Block blockScript = Instantiate(blockPrefab, parentTransform).GetComponent<Block>();
+            blockScript.SetBlockPool(this);
+            return blockScript;
         }
     }
 

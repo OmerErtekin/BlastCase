@@ -341,7 +341,7 @@ RectTransform:
   - {fileID: 38363231}
   - {fileID: 514521163}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1430,7 +1430,7 @@ Transform:
   - {fileID: 1600714483}
   - {fileID: 1656905906}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1822048291
 GameObject:
@@ -1448,6 +1448,7 @@ GameObject:
   - component: {fileID: 1822048297}
   - component: {fileID: 1822048298}
   - component: {fileID: 1822048299}
+  - component: {fileID: 1822048300}
   m_Layer: 0
   m_Name: GridController
   m_TagString: Untagged
@@ -1481,7 +1482,7 @@ Transform:
   m_Children:
   - {fileID: 173330946}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1822048294
 MonoBehaviour:
@@ -1561,6 +1562,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2c4b95844599c847b59891409293f75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1822048300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1822048291}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ace29bc47854a04448b3dfec6ef1ef44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fileName: LevelData
 --- !u!1 &1858235460
 GameObject:
   m_ObjectHideFlags: 0
