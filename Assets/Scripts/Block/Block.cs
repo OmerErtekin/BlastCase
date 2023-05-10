@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Block : MonoBehaviour
+public class Block : MonoBehaviour,IBlastable
 {
     #region Components
     [SerializeField] private SpriteRenderer blockSprite;
@@ -29,8 +29,8 @@ public class Block : MonoBehaviour
         currentColor = color;
         blockSprite.sprite = config.spriteList[(int)currentColor].levelSprites[0];
     }
-    
-    public void BlastTheBlock()
+
+    public void Blast()
     {
         if (fallRoutine != null)
         {

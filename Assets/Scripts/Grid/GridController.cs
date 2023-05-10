@@ -90,7 +90,7 @@ public class GridController : MonoBehaviour
             }
             var position = groupToBlast[i].GetPosition;
             BlockMatrix[position.x, position.y] = null;
-            groupToBlast[i].BlastTheBlock();
+            groupToBlast[i].GetComponent<IBlastable>().Blast();
         }
         EventManager.TriggerEvent(EventKeys.OnBlastCompleted, new object[] { groupToBlast });
     }
