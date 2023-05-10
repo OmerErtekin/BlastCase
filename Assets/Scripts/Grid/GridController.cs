@@ -79,7 +79,7 @@ public class GridController : MonoBehaviour
         affectedColumns.Clear();
         for (int i = 0; i < groupToBlast.Count; i++)
         {
-            //We store affected columns data to have more efficent FillEmptyIndexes method
+            //We store affected columns data to have more efficient FillEmptyIndexes method
             //We will only check affected columns for empty positions
             if (!affectedColumns.Contains(groupToBlast[i].GetPosition.y))
             {

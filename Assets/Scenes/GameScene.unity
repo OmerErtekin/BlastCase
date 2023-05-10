@@ -1562,6 +1562,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2c4b95844599c847b59891409293f75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  waitBeforeShuffle: 1
 --- !u!114 &1822048300
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1574,7 +1575,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ace29bc47854a04448b3dfec6ef1ef44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fileName: LevelData
+  fileName: ShuffleLevelData
 --- !u!1 &1858235460
 GameObject:
   m_ObjectHideFlags: 0

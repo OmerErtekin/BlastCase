@@ -10,6 +10,7 @@ public class GridShuffler : MonoBehaviour
     #endregion
 
     #region Variables
+    [SerializeField] private float waitBeforeShuffle = 1;
     private HashSet<Block> movedBlocks = new ();
     private int[,] intGrid;
     private Block[,] shuffledGrid;
@@ -62,7 +63,7 @@ public class GridShuffler : MonoBehaviour
     private IEnumerator ShuffleGridUntilValid()
     {
         //To give some time to player for understanding there is no match
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(waitBeforeShuffle);
         while (!HasValidMove())
         {
             FisherYatesShuffle();
@@ -157,6 +158,8 @@ public class GridShuffler : MonoBehaviour
 
     private void FisherYatesShuffle()
     {
+        //I made a quick research to decide randomize algorithm. And Fisher yates was one of the most popular
+        //Since it's unbiased and has O(n) time complexity, i decided to use that.
         List<int> elements = new();
 
         for (int i = 0; i < RowCount; i++)
@@ -168,18 +171,17 @@ public class GridShuffler : MonoBehaviour
         }
 
         int n = elements.Count;
-        int randomIndex;
-        int value;
+        int index,value;
         while (n > 1)
         {
             n--;
-            randomIndex = UnityEngine.Random.Range(0, n + 1);
-            value = elements[randomIndex];
-            elements[randomIndex] = elements[n];
+            index = UnityEngine.Random.Range(0, n + 1);
+            value = elements[index];
+            elements[index] = elements[n];
             elements[n] = value;
         }
 
-        int index = 0;
+        index = 0;
         for (int i = 0; i < RowCount; i++)
         {
             for (int j = 0; j < ColumnCount; j++)

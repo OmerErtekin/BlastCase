@@ -3,9 +3,9 @@ using System;
 
 public class GridReader : MonoBehaviour
 {
-    [Header("To test Shuffle mechanic, change the name with ShuffleLevelData\nYou can change levels in Resources folder")]
+    [Header("To play normal level, change the name with LevelData\nYou can change levels in Resources folder")]
 
-    [SerializeField] private string fileName = "LevelData";
+    [SerializeField] private string fileName = "ShuffleLevelData";
 
     public int[,] LoadLevel()
     {
