@@ -50,14 +50,17 @@ public class GridShuffler : MonoBehaviour
 
     private IEnumerator ShuffleGridUntilValid()
     {
+        //To give some time to player for understanding there is no match
+        yield return new WaitForSeconds(1f);
         while (!HasValidMove())
         {
             FisherYatesShuffle();
             yield return null;
         }
         UpgradeGridPositions();
-
+        //To wait until doMove finish
         yield return new WaitForSeconds(0.5f);
+
         EventManager.TriggerEvent(EventKeys.OnShuffledGridReady, new object[] { shuffledGrid });
     }
 
@@ -86,7 +89,7 @@ public class GridShuffler : MonoBehaviour
                 correctBlock = FindBlockByColor((BlockColor)intGrid[i, j]);
                 shuffledGrid[i, j] = correctBlock;
                 newPosition = new Vector2Int(i, j);
-                correctBlock.MoveToNewPosition(newPosition, PositionMatrix[i, j]);
+                correctBlock.MoveToShuffledPosition(newPosition, PositionMatrix[i, j]);
             }
         }
     }

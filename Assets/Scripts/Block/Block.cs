@@ -7,6 +7,7 @@ public class Block : MonoBehaviour, IBlastable
 {
     #region Components
     [SerializeField] private SpriteRenderer blockSprite;
+    [SerializeField] private ParticleSystem blastParticle;
     private BlockPool blockPool;
     #endregion
 
@@ -37,9 +38,17 @@ public class Block : MonoBehaviour, IBlastable
         {
             StopCoroutine(fallRoutine);
         }
+        PlayBlastParticle();
         transform.DOKill();
         blockPool.AddBlockToPool(this);
         gameObject.SetActive(false);
+    }
+
+    private void PlayBlastParticle()
+    {
+        blastParticle.transform.parent = transform.parent;
+        blastParticle.transform.position = transform.position;
+        blastParticle.Play();
     }
 
     public void ShakeTheBlock()
@@ -61,8 +70,12 @@ public class Block : MonoBehaviour, IBlastable
         fallRoutine = StartCoroutine(FallDown(realWorldPosition));
     }
 
-    public void MoveToNewPosition(Vector2Int newPosition, Vector3 realWorldPosition)
+    public void MoveToShuffledPosition(Vector2Int newPosition, Vector3 realWorldPosition)
     {
+        if(fallRoutine != null)
+        {
+            StopCoroutine(fallRoutine);
+        }
         matrixPosition = newPosition;
         transform.DOMove(realWorldPosition, 0.5f).SetTarget(this);
     }

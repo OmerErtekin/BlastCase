@@ -62,14 +62,12 @@ public class GridConnectionFinder : MonoBehaviour
                 }
             }
         }
-        if(totalGroupCount > 0)
-        {
-            SetConnectedGroups();
-        }
-        else
+        SetConnectedGroups();
+        if (totalGroupCount == 0)
         {
             EventManager.TriggerEvent(EventKeys.OnShuffleRequested, new object[] { });
         }
+
     }
 
     private void SetConnectedGroups()
