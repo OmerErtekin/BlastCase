@@ -121,25 +121,23 @@ public class GridShuffler : MonoBehaviour
 
     private bool HasValidMove()
     {
-        //To get the value without having out of bounds
-        Func<int, int, int> get = (x, y) => (x >= 0 && x < RowCount && y >= 0 && y < ColumnCount) ? intGrid[x, y] : -1;
-
+        int value;
         for (int x = 0; x < RowCount; x++)
         {
             for (int y = 0; y < ColumnCount; y++)
             {
-                int value = intGrid[x, y];
-                if (get(x, y + 1) == value)
+                value = intGrid[x, y];
+                if (GetValueOfPosition(x, y + 1) == value)
                 {
-                    if (get(x, y - 1) == value || get(x, y + 2) == value)
+                    if (GetValueOfPosition(x, y - 1) == value || GetValueOfPosition(x, y + 2) == value)
                     {
                         return true;
                     }
                 }
 
-                if (get(x + 1, y) == value)
+                if (GetValueOfPosition(x + 1, y) == value)
                 {
-                    if (get(x - 1, y) == value || get(x + 2, y) == value)
+                    if (GetValueOfPosition(x - 1, y) == value || GetValueOfPosition(x + 2, y) == value)
                     {
                         return true;
                     }
@@ -150,13 +148,20 @@ public class GridShuffler : MonoBehaviour
         return false;
     }
 
+    private int GetValueOfPosition(int rowIndex,int columnIndex)
+    {
+        if (rowIndex < 0 || rowIndex >= RowCount || columnIndex < 0 || columnIndex >= ColumnCount) return -1;
+
+        return intGrid[rowIndex, columnIndex];
+    }
+
     private void FisherYatesShuffle()
     {
         List<int> elements = new();
 
-        for (int i = 0; i < intGrid.GetLength(0); i++)
+        for (int i = 0; i < RowCount; i++)
         {
-            for (int j = 0; j < intGrid.GetLength(1); j++)
+            for (int j = 0; j < ColumnCount; j++)
             {
                 elements.Add(intGrid[i, j]);
             }
@@ -175,9 +180,9 @@ public class GridShuffler : MonoBehaviour
         }
 
         int index = 0;
-        for (int i = 0; i < intGrid.GetLength(0); i++)
+        for (int i = 0; i < RowCount; i++)
         {
-            for (int j = 0; j < intGrid.GetLength(1); j++)
+            for (int j = 0; j < ColumnCount; j++)
             {
                 intGrid[i, j] = elements[index++];
             }
