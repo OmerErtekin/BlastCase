@@ -1445,10 +1445,10 @@ GameObject:
   - component: {fileID: 1822048294}
   - component: {fileID: 1822048295}
   - component: {fileID: 1822048296}
-  - component: {fileID: 1822048297}
-  - component: {fileID: 1822048298}
   - component: {fileID: 1822048299}
   - component: {fileID: 1822048300}
+  - component: {fileID: 1822048297}
+  - component: {fileID: 1822048298}
   m_Layer: 0
   m_Name: GridController
   m_TagString: Untagged
