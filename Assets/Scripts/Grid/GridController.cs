@@ -70,7 +70,7 @@ public class GridController : MonoBehaviour
                 SpawnABlock((BlockColor)startMatrix[i,j],targetPosition,new Vector2Int(i,j));
             }
         }
-        EventManager.TriggerEvent(EventKeys.OnGridCreated);
+        EventManager.TriggerEvent(EventKeys.OnGridCreated,new object[] {columnCount});
     }
 
     private void BlastAGroup(object[] obj = null)
